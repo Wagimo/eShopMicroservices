@@ -7,11 +7,10 @@ public record UpdateProductCommand ( JObject Product, Guid Id )
 
 public record UpdateProductResult ( Guid Id );
 
-internal class UpdateProductHandler ( IDocumentSession session, ILogger<UpdateProductHandler> logger ) : ICommandHandler<UpdateProductCommand, UpdateProductResult>
+internal class UpdateProductHandler ( IDocumentSession session ) : ICommandHandler<UpdateProductCommand, UpdateProductResult>
 {
     public async Task<UpdateProductResult> Handle ( UpdateProductCommand request, CancellationToken cancellationToken )
     {
-        logger.LogInformation ( "Updating product {Id}", request.Id );
 
         var product = await session.LoadAsync<Product> ( request.Id, cancellationToken ) ?? throw new ProductNotFoundException ( request.Id );
 

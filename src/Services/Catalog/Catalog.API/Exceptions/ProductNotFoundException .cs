@@ -1,6 +1,7 @@
-﻿namespace Catalog.API.Exceptions
+﻿
+namespace Catalog.API.Exceptions
 {
-    public class ProductNotFoundException ( Guid id ) : Exception ( $"Product not found: {id}" )
+    public class ProductNotFoundException ( Guid id ) : NotFoundException ( "Product", id )
     {
     }
 }
