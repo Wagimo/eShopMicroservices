@@ -1,6 +1,20 @@
-﻿namespace Ordering.API
+﻿using System.Runtime.CompilerServices;
+
+namespace Ordering.API;
+
+public static class DependencyInjection
 {
-    public class DependencyInjection
+    public static IServiceCollection AddPresentationServices ( this IServiceCollection services )
     {
+        // services.Adcarter();
+        return services;
     }
+
+    public static WebApplication UseApiServices ( this WebApplication app )
+    {
+        //app.Mapcarter();
+        return app;
+    }
+
 }
+

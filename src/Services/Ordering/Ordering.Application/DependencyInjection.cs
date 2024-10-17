@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+namespace Ordering.Application;
 
-namespace Ordering.Application
+public static class DependencyInjection
 {
-    internal class DependencyInjection
+    public static IServiceCollection AddApplicationServices ( this IServiceCollection services )
     {
+        //services.AddMediatR ( conf => {
+        //    conf.RegisterServicesFromAssembly ( Assembly.GetExecutingAssembly ());
+        //});
+        return services;
     }
 }

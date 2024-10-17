@@ -1,6 +1,13 @@
+
+
 var builder = WebApplication.CreateBuilder ( args );
 
 // Add services to the container.
+
+builder.Services
+    .AddApplicationServices ()
+    .AddInfrastructureServices ( builder.Configuration )
+    .AddPresentationServices ();
 
 var app = builder.Build ();
 
