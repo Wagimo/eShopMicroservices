@@ -1,13 +1,12 @@
 
 
-using BuildingBlocks.Exceptions.Handler;
-
 var builder = WebApplication.CreateBuilder ( args );
 
 //Add services into container
 builder.Services.AddCarter ();
 var assembly = typeof ( Program ).Assembly;
 var connectionString = builder.Configuration.GetConnectionString ( "DefaultConnection" )!;
+var redisConnectionString = builder.Configuration.GetConnectionString ( "Redis" )!;
 
 builder.Services.AddMediatR ( config =>
 {
@@ -36,6 +35,22 @@ builder.Services.AddStackExchangeRedisCache ( options =>
     //options.InstanceName = "Basket_";
 } );
 
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient> ( o =>
+{
+    o.Address = new Uri ( builder.Configuration["GrpcSettings:DiscountUrl"]! );
+} ).ConfigurePrimaryHttpMessageHandler ( ( ) => //Omite el certificado SSL
+{
+    var handler = new HttpClientHandler
+    {
+        // Return `true` to allow certificates that are untrusted/invalid
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    };
+    return handler;
+} );
+
+builder.Services.AddHealthChecks ()
+    .AddNpgSql ( connectionString )
+    .AddRedis ( redisConnectionString );
 
 var app = builder.Build ();
 
@@ -43,5 +58,11 @@ var app = builder.Build ();
 app.MapCarter ();
 
 app.UseExceptionHandler ( op => { } );
+
+app.UseHealthChecks ( "/health",
+    new HealthCheckOptions
+    {
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    } );
 
 app.Run ();
