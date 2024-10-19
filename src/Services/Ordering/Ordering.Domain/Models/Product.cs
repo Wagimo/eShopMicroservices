@@ -13,11 +13,11 @@ public class Product : Entity<ProductId>
     public string Name { get; init; } = default!;
     public decimal Price { get; init; } = default!;
 
-    public static Product Create ( string name, decimal price )
+    public static Product Create ( ProductId id, string name, decimal price )
     {
         ArgumentException.ThrowIfNullOrWhiteSpace ( name, nameof ( name ) );
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero ( price, nameof ( price ) );
 
-        return new Product ( ProductId.New (), name, price );
+        return new Product ( id, name, price );
     }
 }

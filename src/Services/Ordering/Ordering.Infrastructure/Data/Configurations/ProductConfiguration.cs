@@ -10,7 +10,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property ( p => p.Id ).HasConversion (
             productId => productId.Value,
-            productBdId => new ProductId ( productBdId ) );
+            productBdId => ProductId.Of ( productBdId ) );
 
         builder.Property ( p => p.Name )
             .IsRequired ()

@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace Ordering.API;
+﻿namespace Ordering.API;
 
 public static class DependencyInjection
 {
@@ -13,6 +11,9 @@ public static class DependencyInjection
     public static WebApplication UseApiServices ( this WebApplication app )
     {
         //app.Mapcarter();
+
+
+
         return app;
     }
 

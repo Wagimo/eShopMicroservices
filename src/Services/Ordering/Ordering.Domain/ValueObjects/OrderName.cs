@@ -11,11 +11,7 @@ public record OrderName
     public static OrderName Of ( string value )
     {
         ArgumentException.ThrowIfNullOrWhiteSpace ( value );
-        //if (value.Length < DefaultLength)
-        //{
-        //    throw new DomainException ( "Order Name cannot be less than 5 characters" );
-        //}
-        ArgumentOutOfRangeException.ThrowIfNotEqual ( value.Length, DefaultLength, "Order Name must be 5 characters" );
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual ( value.Length, DefaultLength, "Order Name must be 5 characters" );
         return new OrderName ( value );
     }
 };

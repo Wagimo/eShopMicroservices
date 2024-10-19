@@ -24,6 +24,18 @@ services:
        - "5433:5432"
      volumes:
        - postgres_basket:/var/lib/postgresql/data/
+
+  orderDb:
+    container_name: orderDb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=admin123
+    restart: always
+    ports:
+      - "1433:1433"
+    volumes:
+    - sqlserver_orderdb:/var/opt/mssql
+
   distributedcache:
      container_name: distributedcache     
      restart: always
