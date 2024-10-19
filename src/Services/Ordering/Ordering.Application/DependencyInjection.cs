@@ -5,9 +5,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationServices ( this IServiceCollection services )
     {
-        //services.AddMediatR ( conf => {
-        //    conf.RegisterServicesFromAssembly ( Assembly.GetExecutingAssembly ());
-        //});
+        services.AddMediatR ( conf =>
+        {
+            conf.RegisterServicesFromAssembly ( Assembly.GetExecutingAssembly () );
+        } );
         return services;
     }
 }

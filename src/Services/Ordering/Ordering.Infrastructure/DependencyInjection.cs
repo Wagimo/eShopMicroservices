@@ -1,6 +1,7 @@
 ﻿
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Ordering.Infrastructure;
 
@@ -10,9 +11,18 @@ public static class DependencyInjection
     {
         var connectionString = configuration.GetConnectionString ( "DefaultConnection" );
 
-        services.AddDbContext<ApplicationDbContext> ( options =>
+        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor> ();
+        services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor> ();
+
+        services.AddDbContext<ApplicationDbContext> ( ( serviceProvider, options ) =>
         {
-            options.AddInterceptors ( new AuditableEntityInterceptor () );
+            //options.AddInterceptors ( 
+            //    new AuditableEntityInterceptor (),
+            //    //DispatchDomainEventsInterceptor necesita un Imediator para publicar los eventos de dominio
+            //    new DispatchDomainEventsInterceptor () 
+            //  );
+
+            options.AddInterceptors ( serviceProvider.GetService<ISaveChangesInterceptor> ()! );
             options.UseSqlServer ( connectionString );
 
         } );
