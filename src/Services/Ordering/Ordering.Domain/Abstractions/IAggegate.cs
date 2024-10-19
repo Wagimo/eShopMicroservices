@@ -1,11 +1,11 @@
 ﻿namespace Ordering.Domain.Abstractions;
 
-public interface IAggegate : IEntity
+public interface IAggregate : IEntity
 {
     IReadOnlyList<IDomainEvent> DomainEvents { get; }
     IDomainEvent[] ClearDomainEvents ( );
 }
 
-public interface IAggegate<T> : IAggegate, IEntity<T>
+public interface IAggregate<T> : IAggregate, IEntity<T>
 {
 }

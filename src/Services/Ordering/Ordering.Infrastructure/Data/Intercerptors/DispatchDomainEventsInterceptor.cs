@@ -22,9 +22,11 @@ public class DispatchDomainEventsInterceptor ( IMediator mediator ) : SaveChange
         if (context is null) return;
 
         var aggregates = context.ChangeTracker
-            .Entries<IAggegate> ()
+            .Entries<IAggregate> ()
             .Where ( x => x.Entity.DomainEvents.Any () )
             .Select ( x => x.Entity );
+
+        if (!aggregates.Any ()) return;
 
         var domainEvents = aggregates
             .SelectMany ( x => x.DomainEvents )
