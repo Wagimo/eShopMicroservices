@@ -2,6 +2,7 @@
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Ordering.Application.Data;
 
 namespace Ordering.Infrastructure;
 
@@ -27,7 +28,7 @@ public static class DependencyInjection
 
         } );
 
-        //services.AddScoped<IApplicationDbContext, ApplicationDbContext> ();
+        services.AddScoped<IApplicationDbContext, ApplicationDbContext> ();
 
         return services;
     }
