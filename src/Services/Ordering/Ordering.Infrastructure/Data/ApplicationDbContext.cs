@@ -1,8 +1,5 @@
 ﻿
 
-
-using Ordering.Application.Data;
-
 namespace Ordering.Infrastructure.Data;
 
 public class ApplicationDbContext ( DbContextOptions<ApplicationDbContext> options ) : DbContext ( options ), IApplicationDbContext
