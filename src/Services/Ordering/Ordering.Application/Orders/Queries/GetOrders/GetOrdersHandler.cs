@@ -9,19 +9,19 @@ public class GetOrdersHandler ( IApplicationDbContext context ) : IQueryHandler<
 
         var currentPage = query.Pagination.PageNumber ?? 0;
         var pageSize = query.Pagination.PageSize ?? 10;
-        //var total = await context.Orders.LongCountAsync ( cancellationToken: cancellationToken );
+        var total = await context.Orders.LongCountAsync ( cancellationToken: cancellationToken );
 
         var ordersPagination = await context.Orders
             .Include ( o => o.OrderItems )
             .OrderByDescending ( o => o.CreatedAt )
             .AsNoTracking ()
-            .ToPageAsync ( currentPage, pageSize );
-        //.Skip ( pageSize * currentPage )
-        //.Take ( pageSize )
-        //.ToListAsync ( cancellationToken: cancellationToken );
+            //.ToPageAsync ( currentPage, pageSize );
+            .Skip ( pageSize * currentPage )
+            .Take ( pageSize )
+            .ToListAsync ( cancellationToken: cancellationToken );
 
-        //return new GetOrdersResult ( new PaginationResult<OrderDto> ( currentPage, pageSize, total, orders.ToOrderDtoList () ) );
-        var pagerDto = ordersPagination.Adapt<PaginationResult<OrderDto>> ();
-        return new GetOrdersResult ( pagerDto );
+        return new GetOrdersResult ( new PaginationResult<OrderDto> ( currentPage, pageSize, total, ordersPagination.ToOrderDtoList () ) );
+        //var pagerDto = ordersPagination.Adapt<PaginationResult<OrderDto>> ();
+        //return new GetOrdersResult ( pagerDto );
     }
 }
