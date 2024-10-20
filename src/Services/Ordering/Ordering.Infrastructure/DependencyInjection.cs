@@ -2,7 +2,7 @@
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Ordering.Application.Data;
+
 
 namespace Ordering.Infrastructure;
 
@@ -23,7 +23,7 @@ public static class DependencyInjection
             //    new DispatchDomainEventsInterceptor () 
             //  );
 
-            options.AddInterceptors ( serviceProvider.GetService<ISaveChangesInterceptor> ()! );
+            options.AddInterceptors ( serviceProvider.GetServices<ISaveChangesInterceptor> () );
             options.UseSqlServer ( connectionString );
 
         } );

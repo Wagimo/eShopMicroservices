@@ -3,7 +3,7 @@
 namespace Ordering.API.EndPoints;
 
 public record CreateOrderRequest ( OrderDto Order );
-public record CreateOrderResponse ( Guid Id );
+public record CreateOrderResponse ( Guid OrderId );
 
 
 public class CreateOrder : ICarterModule
@@ -19,7 +19,7 @@ public class CreateOrder : ICarterModule
 
             var response = result.Adapt<CreateOrderResponse> ();
 
-            return Results.Created ( $"/orders/{response.Id}", response );
+            return Results.Created ( $"/orders/{response.OrderId}", response );
 
         } )
             .WithName ( "CreateOrder" )
