@@ -14,6 +14,8 @@ public class BasketCheckoutDto
     public string Country { get; set; } = default!;
     public string State { get; set; } = default!;
     public string ZipCode { get; set; } = default!;
+    public string City { get; set; } = default!;
+
 
     // Payment
     public string CardName { get; set; } = default!;

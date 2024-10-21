@@ -29,10 +29,10 @@ services:
     container_name: orderDb
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=admin123
+      - SA_PASSWORD=Admin12345**
     restart: always
     ports:
-      - "1433:1433"
+      - "1434:1433"
     volumes:
     - sqlserver_orderdb:/var/opt/mssql
 
@@ -41,6 +41,19 @@ services:
      restart: always
      ports:
        - "6379:6379"
+
+  messagebroker:
+    container_name: messagebroker
+    hostname: ecommerce-mq
+    environment:      
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+
 
   catalog.api:
     environment:
@@ -65,12 +78,16 @@ services:
       - ConnectionStrings__DefaultConnection=Server=basketdb;Port=5432;Database=BasketDb;User Id=postgres;Password=postgres;Include Error Detail=true;
       - ConnectionStrings__Redis=distributedcache:6379 
       - GrpcSettings__DiscountUrl=https://discount.grpc:8081 
+      - MessageBroker__Host=amqp://ecommerce-mq:5672
+      - MessageBroker__Username=amqp://ecommerce-mq:5672
+      - MessageBroker__Password=amqp://ecommerce-mq:5672
     ports:
       - "6001:8080"
       - "6061:8081"
     depends_on:
       - basketdb
       - distributedcache
+      - messagebroker
       - discount.grpc
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
@@ -85,6 +102,26 @@ services:
     ports:
       - "6002:8080"
       - "6062:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  ordering.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__DefaultConnection=Server=orderDb;database=OrderDb;User Id=sa;Password=Admin12345**;Encrypt=False;TrustServerCertificate=True
+      - MessageBroker__Host=amqp://ecommerce-mq:5672
+      - MessageBroker__Username=amqp://ecommerce-mq:5672
+      - MessageBroker__Password=amqp://ecommerce-mq:5672
+      - FeatureManagement__OrderFullfilment=false 
+    ports:
+      - "6003:8080"
+      - "6063:8081"
+    depends_on:
+      - orderDb
+      - messagebroker 
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

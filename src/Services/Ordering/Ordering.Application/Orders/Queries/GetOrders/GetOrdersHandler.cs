@@ -7,7 +7,7 @@ public class GetOrdersHandler ( IApplicationDbContext context ) : IQueryHandler<
     public async Task<GetOrdersResult> Handle ( GetOrdersQuery query, CancellationToken cancellationToken )
     {
 
-        var currentPage = query.Pagination.PageNumber ?? 0;
+        var currentPage = query.Pagination.PageNumber ?? 1;
         var pageSize = query.Pagination.PageSize ?? 10;
         var total = await context.Orders.LongCountAsync ( cancellationToken: cancellationToken );
 
@@ -16,7 +16,7 @@ public class GetOrdersHandler ( IApplicationDbContext context ) : IQueryHandler<
             .OrderByDescending ( o => o.CreatedAt )
             .AsNoTracking ()
             //.ToPageAsync ( currentPage, pageSize );
-            .Skip ( pageSize * currentPage )
+            .Skip ( pageSize * (currentPage - 1) )
             .Take ( pageSize )
             .ToListAsync ( cancellationToken: cancellationToken );
 
